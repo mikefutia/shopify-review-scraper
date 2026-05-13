@@ -1,6 +1,6 @@
-# Shopify Review Scraper
+# Scale AI Shopify Review Scraper
 
-A local web app for extracting customer reviews from Shopify product pages and exporting them to CSV or JSON.
+A free local web app from Scale AI for extracting customer reviews from Shopify product pages and exporting them to CSV or JSON.
 
 This is designed to run on your own computer. No API keys are required.
 
