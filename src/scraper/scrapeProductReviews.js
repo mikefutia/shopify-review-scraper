@@ -160,7 +160,7 @@ async function fetchAdditionalProviderPages(page, networkPayloads, maxReviews) {
 
 async function loadAdditionalVisibleReviews(page, maxReviews) {
   const targetCount = maxReviews + Math.min(10, Math.ceil(maxReviews * 0.25));
-  const maxClicks = Math.min(80, Math.ceil(maxReviews / 3) + 10);
+  const maxClicks = Math.min(55, Math.ceil(maxReviews / 5) + 6);
   let stalledClicks = 0;
 
   for (let i = 0; i < maxClicks; i += 1) {
@@ -190,8 +190,7 @@ async function loadAdditionalVisibleReviews(page, maxReviews) {
 
     if (!clicked) return;
 
-    await page.waitForTimeout(1800);
-    await page.waitForLoadState("networkidle", { timeout: 5_000 }).catch(() => {});
+    await page.waitForTimeout(1500);
 
     const nextCount = await visibleReviewCount(page);
     if (nextCount <= currentCount) {
@@ -216,7 +215,7 @@ async function visibleReviewCount(page) {
 }
 
 async function settleReviewWidgets(page) {
-  await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+  await page.waitForLoadState("networkidle", { timeout: 5_000 }).catch(() => {});
 
   const selectors = [
     "#judgeme_product_reviews",
@@ -236,12 +235,12 @@ async function settleReviewWidgets(page) {
   ];
 
   await page
-    .waitForSelector(selectors.join(","), { timeout: 8_000 })
+    .waitForSelector(selectors.join(","), { timeout: 5_000 })
     .catch(() => {});
 
   for (let i = 0; i < 4; i += 1) {
     await page.mouse.wheel(0, 1200);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(450);
   }
 }
 
