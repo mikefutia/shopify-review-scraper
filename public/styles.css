@@ -138,8 +138,8 @@ select {
 h1 {
   max-width: 760px;
   margin: 0;
-  font-size: clamp(56px, 7vw, 96px);
-  line-height: 0.91;
+  font-size: clamp(48px, 5.8vw, 78px);
+  line-height: 0.94;
   letter-spacing: 0;
   text-wrap: balance;
 }
@@ -483,7 +483,7 @@ time {
   }
 
   h1 {
-    font-size: clamp(48px, 12vw, 72px);
+    font-size: clamp(42px, 11vw, 64px);
   }
 }
 
