@@ -8,6 +8,7 @@ const durationEl = document.querySelector("#duration");
 const resultsEl = document.querySelector("#results");
 const downloadJsonButton = document.querySelector("#download-json");
 const downloadCsvButton = document.querySelector("#download-csv");
+const exportStatusEl = document.querySelector("#export-status");
 const API_BASE = window.location.protocol === "file:" ? "http://localhost:3000" : "";
 const SCRAPE_TIMEOUT_MS = 180_000;
 
@@ -72,19 +73,40 @@ downloadJsonButton.addEventListener("click", () => {
   flashExportButton(downloadJsonButton, "Saved");
 });
 
-downloadCsvButton.addEventListener("click", () => {
+downloadCsvButton.addEventListener("click", async () => {
   if (!lastResult) return;
 
-  const csv = reviewsToCsv(lastResult.reviews);
-  const blob = new Blob([csv], {
-    type: "text/csv;charset=utf-8",
-  });
-  downloadBlob(blob, buildFileName(lastResult.url, "csv"));
-  flashExportButton(downloadCsvButton, "CSV saved");
+  downloadCsvButton.disabled = true;
+  setExportStatus("Saving CSV to Downloads...");
+
+  try {
+    const response = await fetch(`${API_BASE}/api/export/csv`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        url: lastResult.url,
+        reviews: lastResult.reviews,
+      }),
+    });
+    const payload = await response.json();
+
+    if (!response.ok) {
+      throw new Error(payload.message || payload.error || "Export failed");
+    }
+
+    flashExportButton(downloadCsvButton, "CSV saved");
+    setExportStatus(`Saved to Downloads: ${payload.fileName}`);
+  } catch (error) {
+    flashExportButton(downloadCsvButton, "Save failed");
+    setExportStatus(formatErrorMessage(error));
+  } finally {
+    downloadCsvButton.disabled = false;
+  }
 });
 
 function renderResult(result) {
   summaryEl.hidden = false;
+  setExportStatus("");
   countEl.textContent = result.count;
   durationEl.textContent = `${(result.durationMs / 1000).toFixed(1)}s`;
 
@@ -203,20 +225,6 @@ function renderStars(rating) {
   return "★★★★★".slice(0, filled) + "☆☆☆☆☆".slice(0, 5 - filled);
 }
 
-function reviewsToCsv(reviews) {
-  const columns = ["source", "rating", "title", "body", "author", "date"];
-  const rows = reviews.map((review) =>
-    columns.map((column) => csvCell(review[column])).join(",")
-  );
-
-  return [columns.join(","), ...rows].join("\n");
-}
-
-function csvCell(value) {
-  const text = String(value ?? "").replaceAll('"', '""');
-  return `"${text}"`;
-}
-
 function downloadBlob(blob, fileName) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -238,6 +246,10 @@ function flashExportButton(button, message) {
   window.setTimeout(() => {
     button.textContent = originalText;
   }, 1400);
+}
+
+function setExportStatus(message) {
+  exportStatusEl.textContent = message;
 }
 
 function buildFileName(productUrl, extension) {

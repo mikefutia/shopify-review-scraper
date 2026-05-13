@@ -363,12 +363,23 @@ button:disabled {
 
 .export-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 10px;
 }
 
 .export-actions button {
   min-width: 116px;
+}
+
+.export-status {
+  flex: 0 0 100%;
+  min-height: 18px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.35;
+  text-align: right;
 }
 
 .results {

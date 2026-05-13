@@ -7,7 +7,7 @@ This is designed to run on your own computer. No API keys are required.
 ## Features
 
 - Paste a Shopify product page URL and choose a review limit.
-- Export reviews as CSV or JSON.
+- Export reviews as CSV to your local `Downloads` folder, or export the full JSON result from the browser.
 - Uses Playwright, so it can read client-rendered review widgets.
 - Extracts reviews from JSON-LD, rendered review markup, and review-provider network responses.
 - Includes provider-aware handling for Okendo, Junip, and Judge.me, plus generic support for other review widgets.
@@ -75,6 +75,8 @@ curl -X POST http://localhost:3000/api/scrape \
 ```
 
 `maxReviews` defaults to `25` and is capped at `250`.
+
+CSV export is handled by the local server so it works even when browser downloads are blocked. The app writes CSV files directly to your local `Downloads` folder.
 
 Example response:
 
