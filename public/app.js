@@ -8,6 +8,7 @@ const durationEl = document.querySelector("#duration");
 const resultsEl = document.querySelector("#results");
 const downloadJsonButton = document.querySelector("#download-json");
 const downloadCsvButton = document.querySelector("#download-csv");
+const API_BASE = window.location.protocol === "file:" ? "http://localhost:3000" : "";
 
 let lastResult = null;
 
@@ -18,11 +19,12 @@ form.addEventListener("submit", async (event) => {
   const maxReviews = Number(maxReviewsInput.value);
   setLoading(true);
   setStatus("Scraping");
+  document.body.dataset.state = "loading";
   resultsEl.innerHTML = "";
   summaryEl.hidden = true;
 
   try {
-    const response = await fetch("/api/scrape", {
+    const response = await fetch(`${API_BASE}/api/scrape`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url, maxReviews }),
@@ -36,10 +38,18 @@ form.addEventListener("submit", async (event) => {
     lastResult = payload;
     renderResult(payload);
     setStatus("Complete");
+    document.body.dataset.state = "complete";
   } catch (error) {
     lastResult = null;
     setStatus("Failed");
-    resultsEl.innerHTML = `<div class="empty">${escapeHtml(error.message)}</div>`;
+    document.body.dataset.state = "failed";
+    resultsEl.innerHTML = `
+      <div class="empty error-state">
+        <span class="empty-icon">!</span>
+        <h2>Scrape failed</h2>
+        <p>${escapeHtml(error.message)}</p>
+      </div>
+    `;
   } finally {
     setLoading(false);
   }
@@ -70,7 +80,13 @@ function renderResult(result) {
   durationEl.textContent = `${(result.durationMs / 1000).toFixed(1)}s`;
 
   if (!result.reviews.length) {
-    resultsEl.innerHTML = `<div class="empty">No reviews were found. This can happen when a store blocks automation or loads reviews from an unsupported provider.</div>`;
+    resultsEl.innerHTML = `
+      <div class="empty">
+        <span class="empty-icon">0</span>
+        <h2>No reviews found</h2>
+        <p>This store may block automation or use an unsupported review provider.</p>
+      </div>
+    `;
     return;
   }
 
@@ -80,7 +96,7 @@ function renderResult(result) {
         <article class="review">
           <div class="review-topline">
             <strong>${escapeHtml(review.author || "Anonymous")}</strong>
-            <span>${escapeHtml(review.source)}</span>
+            <span class="source-pill">${escapeHtml(review.source)}</span>
           </div>
           <div class="rating">${renderStars(review.rating)} ${review.rating ? `${review.rating}/5` : ""}</div>
           ${review.title ? `<h2>${escapeHtml(review.title)}</h2>` : ""}

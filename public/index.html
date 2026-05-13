@@ -4,42 +4,75 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Shopify Review Scraper</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <section class="workspace">
-        <div class="header">
-          <div>
-            <p class="eyebrow">Review scraper</p>
-            <h1>Shopify Product Reviews</h1>
-            <p class="subhead">Paste a product page URL, choose a limit, and export the reviews you find.</p>
+    <main class="app-shell">
+      <nav class="topbar">
+        <a class="brand" href="/" aria-label="Shopify Review Scraper">
+          <span class="brand-mark">S</span>
+          <span>Review Scraper</span>
+        </a>
+        <div class="topbar-meta">
+          <span>Okendo</span>
+          <span>Junip</span>
+          <span>Judge.me</span>
+        </div>
+      </nav>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Free local scraper</div>
+          <h1>Pull Shopify reviews into a clean CSV.</h1>
+          <p class="subhead">
+            Capture product reviews from popular Shopify review widgets, then export the data for research, analysis, or lead sourcing.
+          </p>
+          <div class="provider-row" aria-label="Supported sources">
+            <span>Okendo</span>
+            <span>Junip</span>
+            <span>Judge.me</span>
+            <span>JSON-LD</span>
           </div>
-          <div class="status" id="status">Ready</div>
         </div>
 
-        <section class="tool-panel">
+        <section class="tool-panel" aria-label="Scraper controls">
+          <div class="panel-topline">
+            <div>
+              <p class="panel-kicker">Product URL</p>
+              <h2>Start a scrape</h2>
+            </div>
+            <div class="status" id="status">Ready</div>
+          </div>
+
           <form id="scrape-form" class="url-form">
-            <label for="product-url">Product URL</label>
+            <label for="product-url">Shopify product page</label>
             <div class="input-row">
               <input
                 id="product-url"
                 name="url"
                 type="url"
-                placeholder="https://store.com/products/product-name"
+                placeholder="https://ridge.com/products/carbon-fiber"
                 autocomplete="url"
                 required
               />
-              <select id="max-reviews" name="maxReviews" aria-label="Maximum reviews">
-                <option value="25">25 reviews</option>
-                <option value="50">50 reviews</option>
-                <option value="100">100 reviews</option>
-                <option value="250">250 reviews</option>
-              </select>
-              <button type="submit">Scrape</button>
+            </div>
+            <div class="control-row">
+              <label class="select-label" for="max-reviews">
+                <span>Limit</span>
+                <select id="max-reviews" name="maxReviews" aria-label="Maximum reviews">
+                  <option value="25">25 reviews</option>
+                  <option value="50">50 reviews</option>
+                  <option value="100">100 reviews</option>
+                  <option value="250">250 reviews</option>
+                </select>
+              </label>
+              <button type="submit">Scrape reviews</button>
             </div>
           </form>
         </section>
+      </section>
+
+      <section class="workspace">
 
         <section class="summary" id="summary" hidden>
           <div>
@@ -56,10 +89,16 @@
           </div>
         </section>
 
-        <section class="results" id="results" aria-live="polite"></section>
+        <section class="results" id="results" aria-live="polite">
+          <div class="empty">
+            <span class="empty-icon">CSV</span>
+            <h2>Reviews will appear here</h2>
+            <p>Run a scrape to preview reviews and export them as CSV.</p>
+          </div>
+        </section>
       </section>
     </main>
 
-    <script src="/app.js" type="module"></script>
+    <script src="./app.js" type="module"></script>
   </body>
 </html>
