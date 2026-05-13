@@ -6,7 +6,14 @@ const app = express();
 const port = Number(process.env.PORT || 3000);
 
 app.use(express.json({ limit: "256kb" }));
-app.use(express.static("public"));
+app.use(
+  express.static("public", {
+    etag: false,
+    setHeaders(res) {
+      res.setHeader("Cache-Control", "no-store");
+    },
+  })
+);
 
 const scrapeRequestSchema = z.object({
   url: z.string().url().refine((value) => /^https?:\/\//i.test(value), {

@@ -472,6 +472,44 @@ time {
   background: #be123c;
 }
 
+.loading-state {
+  gap: 0;
+}
+
+.loading-spinner {
+  width: 58px;
+  height: 58px;
+  margin-bottom: 16px;
+  border: 4px solid rgba(15, 143, 109, 0.14);
+  border-top-color: var(--green);
+  border-radius: 999px;
+  animation: spin 900ms linear infinite;
+}
+
+.loading-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.loading-meta span {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 980px) {
   .hero {
     grid-template-columns: 1fr;
