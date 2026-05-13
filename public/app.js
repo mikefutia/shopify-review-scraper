@@ -69,6 +69,7 @@ downloadJsonButton.addEventListener("click", () => {
     type: "application/json",
   });
   downloadBlob(blob, buildFileName(lastResult.url, "json"));
+  flashExportButton(downloadJsonButton, "Saved");
 });
 
 downloadCsvButton.addEventListener("click", () => {
@@ -79,6 +80,7 @@ downloadCsvButton.addEventListener("click", () => {
     type: "text/csv;charset=utf-8",
   });
   downloadBlob(blob, buildFileName(lastResult.url, "csv"));
+  flashExportButton(downloadCsvButton, "CSV saved");
 });
 
 function renderResult(result) {
@@ -220,8 +222,22 @@ function downloadBlob(blob, fileName) {
   const link = document.createElement("a");
   link.href = url;
   link.download = fileName;
+  link.style.display = "none";
+  document.body.appendChild(link);
   link.click();
-  URL.revokeObjectURL(url);
+
+  window.setTimeout(() => {
+    URL.revokeObjectURL(url);
+    link.remove();
+  }, 1000);
+}
+
+function flashExportButton(button, message) {
+  const originalText = button.textContent;
+  button.textContent = message;
+  window.setTimeout(() => {
+    button.textContent = originalText;
+  }, 1400);
 }
 
 function buildFileName(productUrl, extension) {
