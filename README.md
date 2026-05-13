@@ -4,6 +4,8 @@ A free local web app from Scale AI for extracting customer reviews from Shopify 
 
 This is designed to run on your own computer. No API keys are required.
 
+Check out SCALE AI here: https://www.skool.com/scale-ai/about
+
 ## Features
 
 - Paste a Shopify product page URL and choose a review limit.
